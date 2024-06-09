@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Book>
+@{
+    ViewData["Title"] = "Каталог книг";
+}
+<div id="liveAlertPlaceholder" class="ms-auto" style="position: absolute;"></div>
+<h1 class="text-center">Каталог книг</h1>
+
+<div class="d-flex">
+    <a asp-action="BookUpsert" class="btn btn-success ms-auto">
+        Добавить книгу
+    </a>
+</div>
+
+@if (Model != null && Model.Count() != 0)
+{
+    <div class="d-flex flex-wrap justify-content-center mt-4" style="gap: 10px">
+    @foreach (var book in @Model)
+    {
+        
+        <div class="card" style="width: 18rem;">
+            <img src="/book.jpg" class="card-img-top" alt="...">
+            <div class="card-body d-flex flex-column ">
+                <h5 class="card-title ">@book.Title</h5>
+                <p class="card-text "> @book.Description.Substring(0,40)...</p>
+                <div class="btn-group w-100 card-footer mt-auto">
+                    <a class="btn btn-primary w-50" asp-action="BookInfo" asp-route-id="@book.Id">Подробнее</a>
+                    <form class="w-50" asp-action="AddOrder" asp-route-id="@book.Id" method="post">
+                        <button type="submit" id="liveAlertBtn" class="btn btn-success w-100">Заказать</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+}
+else {
+    <h4 class="text-center mt-4">Книг нет</h4>
+}
+@* *@
+@* <script> *@
+@*     const alertPlaceholder = document.getElementById('liveAlertPlaceholder') *@
+@*      *@
+@*     const alert = (message, type) => { *@
+@*       const wrapper = document.createElement('div') *@
+@*       wrapper.innerHTML = [ *@
+@*         `<div class="alert alert-${type} alert-dismissible" role="alert">`, *@
+@*         `   <div>${message}</div>`, *@
+@*         '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>', *@
+@*         '</div>' *@
+@*       ].join('') *@
+@*      *@
+@*       alertPlaceholder.append(wrapper) *@
+@*     } *@
+@*      *@
+@*     const alertTrigger = document.getElementById('liveAlertBtn') *@
+@*     if (alertTrigger) { *@
+@*       alertTrigger.addEventListener('click', () => { *@
+@*         alert('Заказ добавлен!', 'success') *@
+@*       }) *@
+@*     } *@
+@* </script> *@

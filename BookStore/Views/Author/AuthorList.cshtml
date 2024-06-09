@@ -1,0 +1,87 @@
+﻿@model VMAuthors
+
+@{
+    ViewData["Title"] = "Авторы";
+}
+
+<h1 class="text-center">Авторы книг</h1>
+
+<div class="d-flex mb-4">
+    <button type="button" class="btn btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Добавить автора
+    </button>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Добавление автора</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <form asp-action="AddAuthor" method="post">
+      <div class="modal-body">
+        <h3 class="card-title">Автор</h3>
+        <input type="text" asp-for="@Model.Author.Name"  placeholder="ФИО автора" class="input-group  mt-2 mb-2"  />
+      </div>
+        <div class="modal-footer">
+        
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+@if (Model.Authors != null && Model.Authors.Count() != 0)
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr class="text-center">
+            <th scope="col">#</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Издательства</th>
+            <th scope="col">Книги</th>
+            <th scope="col" class="w-25"></th>
+        </tr>
+        </thead>
+        <tbody >
+        @foreach (var author in @Model.Authors)
+        {
+            <tr>
+                <th class="text-center" scope="row">@author.Id</th>
+                <td class="text-center">@author.Name</td>
+                <td>
+                    <ul>
+                    @foreach (var companies in author.Companies)
+                    {
+                        <li>@companies.Name</li>
+                    }
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        @foreach (var book in @Model.Books)
+                        {
+                            if (book.Author.Name == author.Name)
+                            {
+                                <li>@book.Title</li>
+                            }
+                        }
+                    </ul>
+                </td>
+                <td class="w-25">
+                    <form class="w-100" asp-action="DeleteAuthor" method="post" asp-route-id="@author.Id">
+                        <button type="submit" class="btn btn-danger w-100">Удалить автора</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    
+}
+else {
+    <h4 class="text-center mt-4">Авторов нет</h4>
+}

@@ -1,0 +1,114 @@
+﻿@model VMCompanies
+
+@{
+    ViewData["Title"] = "Издательства";
+}
+
+<h1 class="text-center">Все издательства</h1>
+
+<div class="d-flex mb-1 justify-content-between">
+    <button type="button" class="btn btn-success " data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Добавить издательство
+    </button>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-success ">Добавить автора в издательство</button>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Добавление издательства</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <form asp-action="AddCompany" method="post">
+      <div class="modal-body">
+        <h4 class="card-title">Издательство</h4>
+        <input type="text" asp-for="@Model.Company.Name"  placeholder="Название издательства" class="input-group  mt-2 mb-2"  />
+      </div>
+        <div class="modal-footer">
+        
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel1">Добавление автора</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <form asp-action="AddAuthorToCompany" method="post">
+            <div class="modal-body">
+                <h4 class="card-title">Id издательства</h4>
+                <input asp-for="@Model.Company.Id"  type="number" placeholder="Id Издательства" class="input-group  mt-2 mb-2" />
+                <h4 class="card-title">Id автора</h4>
+                <input type="number" asp-for="@Model.Author.Id"  placeholder="Id Автора" class="input-group  mt-2 mb-2"  />
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+  </div>
+ </div>
+
+
+
+@if (Model != null && Model.Companies.Count != 0)
+{
+    <table class="table table-bordered mt-4">
+        <thead>
+        <tr class="text-center">
+            <th scope="col">#</th>
+            <th scope="col">Название</th>
+            <th scope="col">Состав издательства</th>
+            <th scope="col" class="w-25"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var company in @Model.Companies)
+        {
+            <tr>
+                <th class="text-center" scope="row">@company.Id</th>
+                <td class="text-center">@company.Name</td>
+                <td class="text-center">
+                    <ul class="text-center">
+                        @if (@company.Authors != null)
+                        {
+                            @foreach (var author in @company.Authors)
+                            {
+                                <li class="w-100 d-flex align-items-center mb-1">#@author.Id  @author.Name 
+                                    <form  asp-action="DeleteAuthorFromCompany" method="post" class="ms-auto">
+                                        <input asp-for="@Model.Company.Id" value="@company.Id" hidden="hidden"/>
+                                        <input asp-for="@Model.Author.Id" value="@author.Id" hidden="hidden"/>
+                                        
+                                        <button type="submit"class="btn btn-outline-danger ms-auto">Удалить автора</button>
+                                    </form>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </td>
+                <td>
+
+                    
+                        <form method="post" asp-action="DeleteCompany"  asp-route-Id="@company.Id">
+                            <button type="submit" class="btn btn-danger w-100">Удалить издательство</button>
+                        </form>
+
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    
+}
+else {
+    <h4 class="text-center mt-4">Заказов нет</h4>
+}
