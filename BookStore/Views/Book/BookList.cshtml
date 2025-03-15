@@ -21,7 +21,11 @@
             <img src="/book.jpg" class="card-img-top" alt="...">
             <div class="card-body d-flex flex-column ">
                 <h5 class="card-title ">@book.Title</h5>
-                <p class="card-text "> @book.Description.Substring(0,40)...</p>
+                @if (book.Description.Length > 40)
+                {
+                    book.Description = book.Description.Substring(0, 40);
+                }
+                <p class="card-text "> @book.Description...</p>
                 <div class="btn-group w-100 card-footer mt-auto">
                     <a class="btn btn-primary w-50" asp-action="BookInfo" asp-route-id="@book.Id">Подробнее</a>
                     <form class="w-50" asp-action="AddOrder" asp-route-id="@book.Id" method="post">

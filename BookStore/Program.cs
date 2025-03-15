@@ -1,28 +1,17 @@
 using BookStore.Data;
 using Microsoft.EntityFrameworkCore;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllersWithViews();
 
+var connectionString = builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"];
 
-
-string connection_string = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDb>(options => options.UseSqlServer(connection_string));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-
-
 var app = builder.Build();
-
-
-
-
-
 
 if (!app.Environment.IsDevelopment())
 {

@@ -7,17 +7,17 @@ namespace BookStore.Controllers;
 
 public class BookController : Controller
 {
-    private readonly AppDb _db;
-    public BookController(AppDb db)
+    private readonly AppDbContext _dbContext;
+    public BookController(AppDbContext dbContext)
     {
-        _db = db;
+        _dbContext = dbContext;
     }
     
     
     [HttpGet]
     public async Task< IActionResult> BookList()
     {
-        var books = await _db.Books.ToListAsync();
+        var books = await _dbContext.Books.ToListAsync();
         
         
         return View(books);
@@ -26,7 +26,7 @@ public class BookController : Controller
     [HttpGet]
     public async Task<IActionResult> BookInfo(int Id)
     {
-        var book = await _db.Books.Include(x => x.Author).FirstOrDefaultAsync(x => x.Id == Id);
+        var book = await _dbContext.Books.Include(x => x.Author).FirstOrDefaultAsync(x => x.Id == Id);
         
         return View(book);
     }
@@ -34,10 +34,10 @@ public class BookController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteBook(int id)
     {
-        var book = await _db.Books.FirstOrDefaultAsync(x => x.Id == id);
+        var book = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
 
-        _db.Books.Remove(book);
-        await _db.SaveChangesAsync();
+        _dbContext.Books.Remove(book);
+        await _dbContext.SaveChangesAsync();
         
         return Redirect($"/Book/BookList/");
     }
@@ -45,7 +45,7 @@ public class BookController : Controller
     [HttpGet]
     public async Task<IActionResult> BookUpsert(int? Id)
     {
-        var book = await _db.Books.Include(x => x.Author).FirstOrDefaultAsync(x => x.Id == Id);
+        var book = await _dbContext.Books.Include(x => x.Author).FirstOrDefaultAsync(x => x.Id == Id);
 
         if (book == null)
         {
@@ -54,6 +54,7 @@ public class BookController : Controller
                 Author = new Author()
             };
         }
+        
         return View(book);
     }
     
@@ -62,37 +63,37 @@ public class BookController : Controller
     {
         if (book.Id == null || book.Id == 0)
         {
-            var author = await _db.Authors.FirstOrDefaultAsync(x => x.Id == book.Author.Id);
+            var author = await _dbContext.Authors.FirstOrDefaultAsync(x => x.Id == book.Author.Id);
 
             book.Author = author;
 
-            _db.Books.Add(book);
+            _dbContext.Books.Add(book);
         }
         else
         {
-            var author = await _db.Authors.FirstOrDefaultAsync(x => x.Id == book.Author.Id);
+            var author = await _dbContext.Authors.FirstOrDefaultAsync(x => x.Id == book.Author.Id);
 
             book.Author = author;
             
-            _db.Books.Update(book);
+            _dbContext.Books.Update(book);
         }
         
-        await _db.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
         return RedirectToAction($"BookList");
     }
     
     [HttpPost]
     public async Task<IActionResult> AddOrder(int id)
     {
-        var book = await _db.Books.FirstOrDefaultAsync(x => x.Id == id);
+        var book = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
 
         Order order = new Order()
         {
             Book = book
         };
 
-        _db.Orders.Add(order);
-        await _db.SaveChangesAsync();
+        _dbContext.Orders.Add(order);
+        await _dbContext.SaveChangesAsync();
         
        
         return RedirectToAction("BookList");

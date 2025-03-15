@@ -7,17 +7,17 @@ namespace BookStore.Controllers;
 
 public class CompanyController : Controller
 {
-    private readonly AppDb _db;
-    public CompanyController(AppDb db)
+    private readonly AppDbContext _dbContext;
+    public CompanyController(AppDbContext dbContext)
     {
-        _db = db;
+        _dbContext = dbContext;
     }
     
     
     // GET
     public IActionResult CompanyList()
     {
-        var companies = _db.Companies
+        var companies = _dbContext.Companies
             .Include(x => x.Authors)
             .AsNoTracking()
             .ToList();
@@ -35,8 +35,8 @@ public class CompanyController : Controller
     [HttpPost]
     public IActionResult AddCompany(VMCompanies companies)
     {
-        _db.Companies.Add(companies.Company);
-        _db.SaveChanges();
+        _dbContext.Companies.Add(companies.Company);
+        _dbContext.SaveChanges();
         
         
         return RedirectToAction("CompanyList");
@@ -45,15 +45,15 @@ public class CompanyController : Controller
     [HttpPost]
     public IActionResult AddAuthorToCompany(VMCompanies companies)
     {
-        var author = _db.Authors.Include(x=>x.Companies).FirstOrDefault(x => x.Id == companies.Author.Id);
-        var company = _db.Companies.FirstOrDefault(x => x.Id == companies.Company.Id);
+        var author = _dbContext.Authors.Include(x=>x.Companies).FirstOrDefault(x => x.Id == companies.Author.Id);
+        var company = _dbContext.Companies.FirstOrDefault(x => x.Id == companies.Company.Id);
         
         author.Companies.Add(company);
         
         //company.Authors.U(author);
         
-        _db.Authors.Update(author);
-        _db.SaveChanges();
+        _dbContext.Authors.Update(author);
+        _dbContext.SaveChanges();
         
         
         return RedirectToAction("CompanyList");
@@ -62,16 +62,16 @@ public class CompanyController : Controller
     [HttpPost]
     public IActionResult DeleteAuthorFromCompany(VMCompanies companies)
     {
-        var author = _db.Authors
+        var author = _dbContext.Authors
             .FirstOrDefault(x => x.Id == companies.Author.Id);
-        var company = _db.Companies
+        var company = _dbContext.Companies
             .Include(x=> x.Authors)
             .FirstOrDefault(x => x.Id == companies.Company.Id);
         
         company.Authors.Remove(author);
         
-        _db.Companies.Update(company);
-        _db.SaveChanges();
+        _dbContext.Companies.Update(company);
+        _dbContext.SaveChanges();
         
         
         return RedirectToAction("CompanyList");
@@ -80,11 +80,11 @@ public class CompanyController : Controller
     [HttpPost]
     public IActionResult DeleteCompany(int Id)
     {
-        var companies = _db.Companies
+        var companies = _dbContext.Companies
             .FirstOrDefault(x => x.Id == Id);
 
-        _db.Companies.Remove(companies);
-        _db.SaveChanges();
+        _dbContext.Companies.Remove(companies);
+        _dbContext.SaveChanges();
         
         return RedirectToAction("CompanyList");
     }

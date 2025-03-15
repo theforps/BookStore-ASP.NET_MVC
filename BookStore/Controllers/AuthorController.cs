@@ -7,17 +7,17 @@ namespace BookStore.Controllers;
 
 public class AuthorController : Controller
 {
-    private readonly AppDb _db;
-    public AuthorController(AppDb db)
+    private readonly AppDbContext _dbContext;
+    public AuthorController(AppDbContext dbContext)
     {
-        _db = db;
+        _dbContext = dbContext;
     }
     
     [HttpGet]
     public IActionResult AuthorList()
     {
-        var authors = _db.Authors.Include(x => x.Companies).ToList();
-        var books = _db.Books.Include(x => x.Author).ToList();
+        var authors = _dbContext.Authors.Include(x => x.Companies).ToList();
+        var books = _dbContext.Books.Include(x => x.Author).ToList();
 
         VMAuthors vm = new VMAuthors()
         {
@@ -36,8 +36,8 @@ public class AuthorController : Controller
             Name = authors.Author.Name
         };
 
-        _db.Authors.Add(author);
-        _db.SaveChanges();
+        _dbContext.Authors.Add(author);
+        _dbContext.SaveChanges();
 
         return Redirect($"/Author/AuthorList/");
     }
@@ -45,10 +45,10 @@ public class AuthorController : Controller
     [HttpPost]
     public IActionResult DeleteAuthor(int Id)
     {
-        var author = _db.Authors.FirstOrDefault(x => x.Id == Id);
+        var author = _dbContext.Authors.FirstOrDefault(x => x.Id == Id);
 
-        _db.Authors.Remove(author);
-        _db.SaveChanges();
+        _dbContext.Authors.Remove(author);
+        _dbContext.SaveChanges();
 
         return Redirect($"/Author/AuthorList/");
     }

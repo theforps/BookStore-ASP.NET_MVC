@@ -8,12 +8,12 @@ namespace BookStore.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly AppDb _db;
+    private readonly AppDbContext _dbContext;
 
-    public HomeController(ILogger<HomeController> logger, AppDb db)
+    public HomeController(ILogger<HomeController> logger, AppDbContext dbContext)
     {
         _logger = logger;
-        _db = db;
+        _dbContext = dbContext;
     }
 
 
@@ -23,6 +23,6 @@ public class HomeController : Controller
         
 
 
-        return View(_db.Books.FirstOrDefault());
+        return View(_dbContext.Books.FirstOrDefault());
     }
 }

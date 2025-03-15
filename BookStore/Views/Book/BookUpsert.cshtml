@@ -18,9 +18,9 @@ else
                 <div class="w-100 d-flex">
                     <div class="w-50" style="font-size: 20px">
                         <h3 class="card-title">Название книги</h3>
-                        <input type="text" class="input-group  mt-2 mb-2" asp-for=@Model.Title value=@Model.Title/>
+                        <input type="text" required class="input-group  mt-2 mb-2" asp-for=@Model.Title value=@Model.Title/>
                         <h3 class="card-title">Описание книги</h3>
-                        <textarea style="min-height: 150px; max-height: 150px" type="text" class="input-group  mt-2 mb-2" asp-for=@Model.Description value=@Model.Description></textarea>
+                        <textarea style="min-height: 150px; max-height: 150px" required type="text" class="input-group  mt-2 mb-2" asp-for=@Model.Description value=@Model.Description></textarea>
                         <h3 class="card-title">Количество страниц</h3>
                         <input type="number" class="input-group   mt-2 mb-2" asp-for=@Model.PageCount  value=@Model.PageCount/>
                         <h3 class="card-title">Цена книги (руб.)</h3>

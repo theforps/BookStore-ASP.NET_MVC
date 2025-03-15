@@ -6,15 +6,15 @@ namespace BookStore.Controllers;
 
 public class OrderController : Controller
 {
-    private readonly AppDb _db;
-    public OrderController(AppDb db)
+    private readonly AppDbContext _dbContext;
+    public OrderController(AppDbContext dbContext)
     {
-        _db = db;
+        _dbContext = dbContext;
     }
     // GET
     public IActionResult OrderList()
     {
-        var orders = _db.Orders.Include(x => x.Book).ToList();
+        var orders = _dbContext.Orders.Include(x => x.Book).ToList();
         
         
         return View(orders);
@@ -23,10 +23,10 @@ public class OrderController : Controller
     [HttpGet]
     public IActionResult DeleteOrder(int Id)
     {
-        var orders = _db.Orders.FirstOrDefault(x => x.Id == Id);
+        var orders = _dbContext.Orders.FirstOrDefault(x => x.Id == Id);
 
-        _db.Orders.Remove(orders);
-        _db.SaveChanges();
+        _dbContext.Orders.Remove(orders);
+        _dbContext.SaveChanges();
         
         
         return RedirectToAction("OrderList");
