@@ -1,4 +1,4 @@
-# ASP.NET MVC + MS SQL Server
+# ASP.NET MVC + PostgreSQL
 
 This template should help get you started developing.
 
@@ -12,7 +12,7 @@ This template should help get you started developing.
 
 ## The database used
 
-[MS SQL Server](https://www.microsoft.com/ru-ru/sql-server/sql-server-downloads)
+[PostgreSQL](https://www.postgresql.org/)
 
 The database must be created independently the first time it is accessed.
 
